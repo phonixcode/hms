@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use App\Models\Project;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -25,6 +26,7 @@ class ProjectFactory extends Factory
             'status' => $this->faker->randomElement(['pending', 'in-progress', 'completed']),
             'start_date' => $this->faker->date,
             'end_date' => $this->faker->optional()->date,
+            'user_id' => User::factory(),
         ];
     }
 }
