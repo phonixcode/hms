@@ -23,9 +23,10 @@ class ProjectController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $projects = $this->projectRepository->all();
+        $search = $request->get('search');
+        $projects = $this->projectRepository->getProjectsWithEmployees($search, $request->get('per_page', 10));
         return $this->successResponse($projects, 'Projects retrieved successfully');
     }
 
@@ -87,5 +88,12 @@ class ProjectController extends Controller
         return $this->handleDelete(function () use ($id) {
             $this->projectRepository->delete($id);
         }, 'Project deleted successfully');
+    }
+
+
+    public function dashboard()
+    {
+        $summary = $this->projectRepository->getDashboardSummary();
+        return $this->successResponse($summary, 'Project dashboard summary retrieved successfully');
     }
 }

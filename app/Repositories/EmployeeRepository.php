@@ -8,7 +8,7 @@ class EmployeeRepository
 {
     public function all()
     {
-        return Employee::all();
+        return Employee::paginate(10);
     }
 
     public function create(array $data)

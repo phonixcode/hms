@@ -32,4 +32,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource('projects.employees', EmployeeController::class);
 
     Route::post('/projects/{project_id}/employees/{id}/restore', [EmployeeController::class, 'restore']);
+    Route::get('/dashboard', [ProjectController::class, 'dashboard']);
 });
