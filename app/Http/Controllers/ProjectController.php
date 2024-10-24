@@ -35,7 +35,10 @@ class ProjectController extends Controller
     public function store(CreateProjectRequest $request)
     {
         return $this->handleCreate(function () use ($request) {
-            return $this->projectRepository->create($request->validated());
+            return $this->projectRepository->create(array_merge(
+                $request->validated(),
+                ['user_id' => auth()->id()]
+        ));
         }, 'Project created successfully');
     }
 
@@ -61,6 +64,8 @@ class ProjectController extends Controller
             return $this->notFoundResponse('Project not found');
         }
 
+        $this->authorize('update', $project);
+
         return $this->handleUpdate(function () use ($id, $request) {
             return $this->projectRepository->update($id, $request->validated());
         }, 'Project updated successfully');
@@ -76,6 +81,8 @@ class ProjectController extends Controller
         if (!$project) {
             return $this->notFoundResponse('Project not found');
         }
+
+        $this->authorize('delete', $project);
 
         return $this->handleDelete(function () use ($id) {
             $this->projectRepository->delete($id);
