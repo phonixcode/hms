@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Employee\CreateEmployeeRequest;
-use App\Http\Requests\Employee\UpdateEmployeeRequest;
 use App\Models\Employee;
-use App\Repositories\EmployeeRepository;
 use Illuminate\Http\Request;
 use App\Traits\SoftDeleteTrait;
+use App\Mail\WelcomeEmployeeMail;
+use Illuminate\Support\Facades\Mail;
+use App\Repositories\EmployeeRepository;
 use App\Traits\HandlesRepositoryActionsTrait;
+use App\Http\Requests\Employee\CreateEmployeeRequest;
+use App\Http\Requests\Employee\UpdateEmployeeRequest;
 
 class EmployeeController extends Controller
 {
@@ -36,12 +38,18 @@ class EmployeeController extends Controller
      */
     public function store(CreateEmployeeRequest $request, $project_id)
     {
-        return $this->handleCreate(function () use ($request, $project_id) {
+        $employeeData = $request->validated();
+
+        $employee = $this->handleCreate(function () use ($request, $project_id) {
             return $this->employeeRepository->create(array_merge(
                 $request->validated(),
                 ['project_id' => $project_id]
             ));
         }, 'Employee created successfully');
+
+    
+        Mail::to($employeeData['email'])->send(new WelcomeEmployeeMail($employeeData));
+        return $this->successResponse($employee, 'Employee created successfully', 201);
     }
 
     /**
