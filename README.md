@@ -77,3 +77,4 @@ Before you begin, ensure you have met the following requirements:
 
 ### API Endpoints
 
+check the complete documentation here [Documentation](https://documenter.getpostman.com/view/36429449/2sAY4rGRKv).
